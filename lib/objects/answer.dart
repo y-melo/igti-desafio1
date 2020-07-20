@@ -859,27 +859,38 @@ class Answer {
     switch (this.selectHandler) {
       case 0:
         var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
-        });
         answer.write("Sum is: " + balanceSum.toString());
         break;
       case 1:
         var result = 0;
-        accountsJson.forEach((element) {
-          if (element['balance'] >= 100) {
-            result += 1;
-          }
-        });
+        result = accountsJson
+            .where((element) => element['balance'] >= 100)
+            .reduce((value, element) => result += 1);
+
+        // accountsJson.forEach((element) {
+        //   if (element['balance'] >= 100) {
+        //     result += 1;
+        //   }
+        // });
+        // print("NEW > " +
+        //     accountsJson
+        //         .where((element) => element['balance'] >= 100)
+        //         .reduce((value, element) => result += 1)
+        //         .toString());
+        // print("OLD >" + result.toString());
         answer.write("Num of Acc qt \$100 is: " + result.toString());
         break;
       case 2:
         var result = 0;
-        accountsJson.forEach((element) {
-          if (element['agencia'] == 33 && element['balance'] >= 100) {
-            result += 1;
-          }
-        });
+
+        result = accountsJson
+            .where((element) => element['agencia'] == 33)
+            .reduce((value, element) => result += 1);
+        // accountsJson.forEach((element) {
+        //   if (element['agencia'] == 33 && element['balance'] >= 100) {
+        //     result += 1;
+        //   }
+        // });
         answer.write("Num of Acc Ag 33 qt \$100 is: " + result.toString());
         break;
       case 3:
@@ -912,8 +923,6 @@ class Answer {
         accountsJson.forEach((element) {
           listOfAgencies.add(element['agencia']);
         });
-        mapBiggestBalance
-            .where((element){ element['agencia'] == listOfAgencies[0]});
         // accountsJson.forEach((element) {
         //   if (mapBiggestBalance.contains(element['agencia'])) {
         //     // updata
