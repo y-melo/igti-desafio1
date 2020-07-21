@@ -855,135 +855,168 @@ class Answer {
 
   String giveAnswer() {
     StringBuffer answer = new StringBuffer();
-    answer.write("Question " + this.selectHandler.toString() + " : ");
+    answer.write("Question " + (this.selectHandler + 1).toString() + " : ");
     switch (this.selectHandler) {
       case 0:
-        var balanceSum = 0;
+        // A Soma total dos depósitos de todas as agências.
+        var balanceSum = accountsJson.fold(
+            0, (previousValue, element) => previousValue + element['balance']);
         answer.write("Sum is: " + balanceSum.toString());
         break;
       case 1:
         var result = 0;
-        result = accountsJson
+        accountsJson
             .where((element) => element['balance'] >= 100)
-            .reduce((value, element) => result += 1);
-
-        // accountsJson.forEach((element) {
-        //   if (element['balance'] >= 100) {
-        //     result += 1;
-        //   }
-        // });
-        // print("NEW > " +
-        //     accountsJson
-        //         .where((element) => element['balance'] >= 100)
-        //         .reduce((value, element) => result += 1)
-        //         .toString());
-        // print("OLD >" + result.toString());
-        answer.write("Num of Acc qt \$100 is: " + result.toString());
+            .forEach((element) {
+          result += 1;
+        });
+        answer.write("Accounts with \$100 or more :\n" + result.toString());
         break;
       case 2:
         var result = 0;
 
-        result = accountsJson
+        accountsJson
             .where((element) => element['agencia'] == 33)
-            .reduce((value, element) => result += 1);
-        // accountsJson.forEach((element) {
-        //   if (element['agencia'] == 33 && element['balance'] >= 100) {
-        //     result += 1;
-        //   }
-        // });
-        answer.write("Num of Acc Ag 33 qt \$100 is: " + result.toString());
+            .where((element) => element['balance'] >= 100)
+            .forEach((element) => result += 1);
+
+        answer.write("Accounts at ag33 qt \$100 : " + result.toString());
         break;
       case 3:
-        var result = 0;
-        var biggest = 0;
-        accountsJson.forEach((element) {
-          if (biggest < element['balance']) {
-            biggest = element['balance'];
-            result = element['agencia'];
-          }
-        });
+        // Agency with biggest balance
+        var result = getAgencyBalance().reversed.toList()[0];
         answer.write("Ag with more \$ :" + result.toString());
         break;
       case 4:
-        var result = 0;
-        var lowest = accountsJson[0]['balance'];
-        accountsJson.forEach((element) {
-          if (lowest > element['balance']) {
-            lowest = element['balance'];
-            result = element['agencia'];
-          }
-        });
+        var result = getAgencyBalance()[0];
         answer.write("Ag with less \$ :" + result.toString());
         break;
       case 5:
         // soma dos clientes com maior saldo
         var result;
         var listOfAgencies = [];
-        var mapBiggestBalance = [];
+        var biggest = 0;
+        var biggestBalances = [];
         accountsJson.forEach((element) {
           listOfAgencies.add(element['agencia']);
         });
-        // accountsJson.forEach((element) {
-        //   if (mapBiggestBalance.contains(element['agencia'])) {
-        //     // updata
-        //     mapBiggestBalance.up
-        //   } else {
-        //     mapBiggestBalance
-        //         .add({'ag': element['agencia'], 'balance': element['balance']});
-        //   }
-        // });
-        // mapBiggestBalance
-        //     .add({'ag': element['agencia'], 'balance': element['balance']});
-        // result = listOfAgencies.toSet().toList();
-        result = mapBiggestBalance.toString();
-        answer.write("..." + result.toString());
+        // listOfAgencies = listOfAgencies.toSet().toList();
+        listOfAgencies.toSet().toList().forEach((agency) {
+          biggest = 0;
+          accountsJson
+              .where((element) => element['agencia'] == agency)
+              .forEach((element) {
+            if (biggest < element['balance']) {
+              biggest = element['balance'];
+            }
+          });
+          biggestBalances.add({'agency': agency, 'biggestBalance': biggest});
+        });
+
+        result = biggestBalances.fold(
+            0, (prev, element) => prev + element['biggestBalance']);
+        answer.write("Sum of all Biggest balance " + result.toString());
         break;
       case 6:
-        var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
+        //O nome do(a) cliente com o maior saldo na agência 10.
+        var result = "";
+        var biggest = 0;
+        accountsJson
+            .where((account) => account['agencia'] == 10)
+            .forEach((element) {
+          if (biggest < element['balance']) {
+            biggest = element['balance'];
+            result = element['name'];
+          }
         });
-        answer.write("Not Implemented Yet." + balanceSum.toString());
+        answer.write("Richest client at ag10: " + result);
         break;
       case 7:
-        var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
+        // O nome do(a) cliente com o menor saldo na agência 47.
+        var result = "";
+        var lowest = accountsJson
+            .where((element) => element['agencia'] == 47)
+            .toList()[0]['balance'];
+        accountsJson
+            .where((account) => account['agencia'] == 47)
+            .forEach((element) {
+          if (lowest > element['balance']) {
+            lowest = element['balance'];
+            result = element['name'];
+          }
         });
-        answer.write("Not Implemented Yet." + balanceSum.toString());
+
+        answer.write("Poorest Client at ag47: " + result.toString());
         break;
       case 8:
-        var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
+        // nomes dos três clientes com menor saldo da agência 47(separados por vírgula e em ordem crescente).
+        var preresultList = [];
+        var resultList = [];
+
+        var name = "";
+        var lowest = accountsJson
+            .where((account) => account['agencia'] == 47)
+            .toList()[0]['balance'];
+        var tempList =
+            accountsJson.where((account) => account['agencia'] == 47).toList();
+        tempList.forEach((element) {
+          preresultList.add({
+            'name': element['name'],
+            'agency': element['agencia'],
+            'balance': element['balance']
+          });
         });
-        answer.write("Not Implemented Yet." + balanceSum.toString());
+        // Sort by balance
+        preresultList.sort((a, b) => a['balance'].compareTo(b['balance']));
+        // Sort by name
+        // preresultList.sort((a, b) => a['name'].compareTo(b['name']));
+        preresultList.take(3).forEach((element) {
+          resultList.add(element['name']);
+        });
+        answer.write(
+            "Lowest Balance clients at ag47: \n " + resultList.toString());
         break;
       case 9:
-        var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
-        });
-        answer.write("Not Implemented Yet." + balanceSum.toString());
+        // Quantos clientes estão na agência 47.
+        var result =
+            accountsJson.where((element) => element['agencia'] == 47).length;
+        //     .forEach((element) {
+        //   result += 1;
+        // });
+
+        answer.write("Clients at Ag47: " + result.toString());
         break;
       case 10:
-        var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
-        });
-        answer.write("Not Implemented Yet." + balanceSum.toString());
-        break;
-      case 11:
-        var balanceSum = 0;
-        accountsJson.forEach((element) {
-          balanceSum += element['balance'];
-        });
-        answer.write("Not Implemented Yet." + balanceSum.toString());
+        var result = accountsJson
+            .where((element) => element['agencia'] == 47)
+            .where((element) =>
+                element['name'].toLowerCase().contains('Maria'.toLowerCase()))
+            .length;
+        answer.write("Clients with name Maria at ag47 :\n" + result.toString());
         break;
       default:
     }
 
     return answer.toString();
+  }
+
+  List<dynamic> getAgencyBalance() {
+    var listOfAgencies = [];
+    var tempAmmount = 0;
+    var agencyBalance = [];
+    accountsJson.forEach((element) {
+      listOfAgencies.add(element['agencia']);
+    });
+    listOfAgencies.toSet().toList().forEach((agency) {
+      tempAmmount = 0;
+      accountsJson
+          .where((element) => element['agencia'] == agency)
+          .forEach((element) => tempAmmount += element['balance']);
+
+      agencyBalance.add({'agency': agency, 'balance': tempAmmount});
+    });
+    agencyBalance.sort((a, b) => a['balance'].compareTo(b['balance']));
+    return agencyBalance;
   }
 
   Future<List> getAccounts() async {
