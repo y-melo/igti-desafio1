@@ -132,26 +132,33 @@ class _HomeState extends State<Home> {
         _salarioBrutodb - _descontoINSS - _descontoIRPF - _descontosdb;
 
     debugPrint("Bruto: $_salarioBrutodb | Liquido: $_salarioLiquido");
-    _showMyDialog(_salarioLiquido.toStringAsFixed(2));
+    _showMyDialog(_salarioLiquido.toStringAsFixed(2),
+        _descontoINSS.toStringAsFixed(2), _descontoIRPF.toStringAsFixed(2));
   }
 
-  Future<void> _showMyDialog(var salarioLiquido) async {
+  Future<void> _showMyDialog(
+      var salarioLiquido, var descINSS, var descIRPF) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('AlertDialog Title'),
+          title: Text('Salario Liquido'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Seu salario liquido deve ser: $salarioLiquido'),
+                Text(
+                  'R\$ $salarioLiquido',
+                  textScaleFactor: 2,
+                ),
+                Text(
+                    '\nDescontos: \n[INSS: R\$ $descINSS] \n[IRPF: R\$ $descIRPF]'),
               ],
             ),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Approve'),
+              child: Text('Voltar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
