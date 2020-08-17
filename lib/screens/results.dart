@@ -11,6 +11,15 @@ class Result extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Results"),
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
+          },
+        ),
       ),
       body: Center(
         child: Column(

@@ -9,14 +9,7 @@ class Home extends StatelessWidget {
   final int indexReset;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("t ${this.title}"),
-      ),
-      body: Splashscreen(),
-    );
-  }
+  Widget build(BuildContext context) => Splashscreen();
 }
 
 class Splashscreen extends StatefulWidget {

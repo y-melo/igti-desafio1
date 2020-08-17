@@ -27,21 +27,16 @@
       }, 
       {
         "id": 6,
-        "Question": "Flutter é uma dos frameworks de desenvolvimento mobile",
-        "Anwser": true
-      }, 
-      {
-        "id": 7,
         "Question": "O Flutter possui interoperabilidade e pode ter projetos em Java e Dart",
         "Anwser": false
       }, 
       {
-        "id": 8,
+        "id": 7,
         "Question": "React-Native é uma plataforma para desenvolvimento de aplicativos móveis",
         "Anwser": true
       }, 
       {
-        "id": 9,
+        "id": 8,
         "Question": "O Kotlin possui interoperabilidade oque possibilita implementar projetos em Java e Kotlin",
         "Anwser": true
       }

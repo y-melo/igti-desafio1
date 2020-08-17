@@ -22,7 +22,7 @@ class _QuestionCardState extends State<QuestionCard> {
         elevation: 5,
         color: Colors.blueGrey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
@@ -73,14 +73,14 @@ class _QuestionCardState extends State<QuestionCard> {
     var questionLength = widget.questionLength;
     var _questionIndex = widget.question["id"];
     StringBuffer returnResp =
-        new StringBuffer("${widget.question["Question"]}: $response ->");
+        new StringBuffer("${widget.question["Question"]} -> ");
     Color _responseColor = Colors.grey;
     if (widget.question["Anwser"] == response) {
-      returnResp.write("Correct");
+      returnResp.write("Acertou !");
       _responseColor = Colors.greenAccent;
       _anwserCount++;
     } else {
-      returnResp.write("Correct");
+      returnResp.write("Errado !");
       _responseColor = Colors.redAccent;
     }
     if (_questionIndex + 1 > questionLength) {
